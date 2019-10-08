@@ -1,16 +1,41 @@
 package com.example.blog
 
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.client.getForEntity
+import org.springframework.http.HttpStatus
 
-@RunWith(SpringRunner::class)
-@SpringBootTest
-class BlogApplicationTests {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class BlogApplicationIntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
+
+    @BeforeAll
+    fun setup() {
+        println(">> Setup")
+    }
 
     @Test
-    fun contextLoads() {
+    fun `Assert blog page title, content and status code`() {
+        println(">> Assert blog page title, content and status code")
+        val entity = restTemplate.getForEntity<String>("/")
+        assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(entity.body).contains("<h1>Blog</h1>")
+    }
+
+    @Test
+    fun `Assert article page title, content and status code`() {
+        val entity = restTemplate.getForEntity<String>("/")
+        assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(entity.body).contains("<p>Content</p>")
+    }
+
+    @AfterAll
+    fun teardown() {
+        println(">> Tear down")
     }
 
 }
