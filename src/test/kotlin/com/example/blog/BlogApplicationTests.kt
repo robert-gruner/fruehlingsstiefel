@@ -32,6 +32,14 @@ class BlogApplicationIntegrationTests(@Autowired val restTemplate: TestRestTempl
         assertThat(entity.body).contains("<div class=\"articles\">")
     }
 
+    @Test
+    fun `Assert article page title, content and status code`() {
+        val title = "Reactor Aluminium has landed"
+        val entity = restTemplate.getForEntity<String>("/article/${title.toSlug()}")
+        assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(entity.body).contains(title, "Lorem ipsum", "dolor sit amet")
+    }
+
     @AfterAll
     fun teardown() {
         println(">> Tear down")
