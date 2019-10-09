@@ -5,5 +5,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties("blog")
 class BlogProperties {
 
-    var title: String = "Super Blog"
+    lateinit var title: String
 }
