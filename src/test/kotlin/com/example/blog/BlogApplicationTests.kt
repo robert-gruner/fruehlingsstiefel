@@ -19,18 +19,17 @@ class BlogApplicationIntegrationTests(@Autowired val restTemplate: TestRestTempl
     }
 
     @Test
-    fun `Assert blog page title, content and status code`() {
-        println(">> Assert blog page title, content and status code")
+    fun `Assert blog page headline and status code`() {
         val entity = restTemplate.getForEntity<String>("/")
         assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(entity.body).contains("<h1>Blog</h1>")
     }
 
     @Test
-    fun `Assert article page title, content and status code`() {
+    fun `Assert blog page content and status code`() {
         val entity = restTemplate.getForEntity<String>("/")
         assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(entity.body).contains("<p>Content</p>")
+        assertThat(entity.body).contains("<div class=\"articles\">")
     }
 
     @AfterAll
